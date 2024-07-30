@@ -7,7 +7,6 @@ on:
       - 'docs/archive/docs-2.x'
       - 'docs/archive/docs-1.x'
       - '.github/workflows/docs.yml'
-      - 'VERSION'
 
   workflow_dispatch:
 
