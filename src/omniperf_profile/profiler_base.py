@@ -63,43 +63,6 @@ class OmniProfiler_Base:
         return []
 
     @demarcate
-    def pmc_perf_split(self):
-        """Avoid default rocprof join utility by spliting each line into a separate input file"""
-        workload_perfmon_dir = os.path.join(self.__args.path, "perfmon")
-        lines = (
-            open(os.path.join(workload_perfmon_dir, "pmc_perf.txt"), "r")
-            .read()
-            .splitlines()
-        )
-
-        # Iterate over each line in pmc_perf.txt
-        mpattern = r"^pmc:(.*)"
-        i = 0
-        for line in lines:
-            # Verify no comments
-            stext = line.split("#")[0].strip()
-            if not stext:
-                continue
-
-            # all pmc counters start with  "pmc:"
-            m = re.match(mpattern, stext)
-            if m is None:
-                continue
-
-            # Create separate file for each line
-            fd = open(workload_perfmon_dir + "/pmc_perf_" + str(i) + ".txt", "w")
-            fd.write(stext + "\n\n")
-            fd.write("gpu:\n")
-            fd.write("range:\n")
-            fd.write("kernel:\n")
-            fd.close()
-
-            i += 1
-
-        # Remove old pmc_perf.txt input from perfmon dir
-        os.remove(workload_perfmon_dir + "/pmc_perf.txt")
-
-    @demarcate
     def join_prof(self, out=None):
         """Manually join separated rocprof runs"""
         # Set default output directory if not specified
@@ -107,6 +70,7 @@ class OmniProfiler_Base:
             if out is None:
                 out = self.__args.path + "/pmc_perf.csv"
             files = glob.glob(self.__args.path + "/" + "pmc_perf_*.csv")
+            files.extend(glob.glob(self.__args.path + "/" + "SQ_*.csv"))
         elif type(self.__args.path) == list:
             files = self.__args.path
         else:
@@ -261,7 +225,9 @@ class OmniProfiler_Base:
             df.to_csv(out, index=False)
             if not self.__args.verbose:
                 for file in files:
-                    os.remove(file)
+                    # Do not remove accumulate counter files
+                    if "SQ_" not in file:
+                        os.remove(file)
         else:
             return df
 
@@ -300,7 +266,7 @@ class OmniProfiler_Base:
             self.__args.remaining = " ".join(self.__args.remaining)
         else:
             console_error(
-                "Profiling command required. Pass application executable after -- at the end of options.\n\t\ti.e. omniperf profile -n vcopy -- ./vcopy 1048576 256"
+                "Profiling command required. Pass application executable after -- at the end of options.\n\t\ti.e. omniperf profile -n vcopy -- ./vcopy -n 1048576 -b 256"
             )
 
         # verify name meets MongoDB length requirements and no illegal chars
@@ -329,7 +295,12 @@ class OmniProfiler_Base:
         else:
             console_log("Hardware Blocks: " + str(self.__args.ipblocks))
 
-        print_status("Collecting Performance Counters")
+        msg = "Collecting Performance Counters"
+        (
+            print_status(msg)
+            if not self.__args.roof_only
+            else print_status(msg + " (Roofline Only)")
+        )
 
         # show status bar in error-only mode
         disable_tqdm = True
