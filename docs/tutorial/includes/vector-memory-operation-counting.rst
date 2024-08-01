@@ -623,7 +623,7 @@ manner. See
 for further reading on this instruction type.
 
 We develop a `simple
-kernel <https://github.com/ROCm/omniperf/blob/dev/sample/stack.hip>`__
+kernel <https://github.com/ROCm/omniperf/blob/release/rocm-rel-6.2/sample/stack.hip>`__
 that uses stack memory:
 
 .. code-block:: cpp

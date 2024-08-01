@@ -792,7 +792,7 @@ units and instruction issue.
        kernel in cycles. Computed as the ratio of the total number of cycles the
        MFMA unit was busy over the total number of MFMA instructions. Compare
        to, for example, the
-       `AMD Matrix Instruction Calculator <https://github.com/RadeonOpenCompute/amd_matrix_instruction_calculator>`_.
+       `AMD Matrix Instruction Calculator <https://github.com/ROCm/amd_matrix_instruction_calculator>`_.
 
      - Cycles per instruction
 
