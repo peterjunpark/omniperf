@@ -21,4 +21,4 @@ on:
 jobs:
   call-workflow-passing-data:
     name: Linting
-    uses: ROCm/rocm-docs-core/.github/workflows/linting.yml@develop
+    uses: peterjunpark/rocm-docs-core/.github/workflows/linting.yml@ci/linting
