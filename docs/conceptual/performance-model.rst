@@ -24,9 +24,12 @@ to use Omniperf to optimize your code.
 
 .. note::
 
-   In this chapter, **MI2XX** refers to any of the CDNA2 architecture-based AMD
-   Instinct MI250X, MI250, and MI210 accelerators interchangeably in cases
+   In this chapter, **MI3XX** refers to any of the CDNA3 architecture-based AMD
+   Instinct MI300X and MI300A accelerators interchangeably in cases
    where the exact product at hand is not relevant.
+
+   Likewise, **MI2XX** refers to any of the CDNA2 architecture-based AMD
+   Instinct MI250X, MI250, and MI210 accelerators interchangeably.
 
    For a comparison of AMD Instinct accelerator specifications, refer to
    :doc:`Hardware specifications <rocm:reference/gpu-arch-specs>`. For product
